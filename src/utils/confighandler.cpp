@@ -142,6 +142,9 @@ static QMap<class QString, QSharedPointer<ValueHandler>>
 #if defined(Q_OS_WIN)
     // Not visible on settings dialog
     OPTION("ignorePrntScrForcesSnipping" ,Bool               ( false         )),
+    // Draw the capture overlay across all monitors (pre-v14 behaviour)
+    // instead of showing the monitor selection UI.
+    OPTION("spanAllMonitors"             ,Bool               ( true          )),
 #endif
 #if !defined(Q_OS_MACOS)
     // Auto-select the monitor under the cursor instead of showing

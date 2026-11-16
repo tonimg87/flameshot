@@ -224,7 +224,21 @@ void Flameshot::screen(CaptureRequest req, const int screenNumber)
             if (selectedScreen) {
                 geometry = ScreenGrabber().screenGeometry(selectedScreen);
             } else {
+#if defined(Q_OS_WIN)
+                // spanAllMonitors returns the whole desktop: fall back to
+                // the screen under the cursor
+                QScreen* cursorScreen = QGuiAppCurrentScreen().currentScreen();
+                if (cursorScreen) {
+                    p = ScreenGrabber().grabScreen(cursorScreen, ok);
+                    if (ok) {
+                        geometry = ScreenGrabber().screenGeometry(cursorScreen);
+                    }
+                } else {
+                    ok = false;
+                }
+#else
                 ok = false;
+#endif
             }
         }
     } else if (screenNumber >= qApp->screens().count()) {

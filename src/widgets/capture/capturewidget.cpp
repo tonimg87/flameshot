@@ -205,7 +205,18 @@ CaptureWidget::CaptureWidget(const CaptureRequest& req,
     }
 
     QVector<QRect> areas;
-    if (m_context.fullscreen) {
+#if defined(Q_OS_WIN)
+    if (m_context.fullscreen && selectedScreen == nullptr) {
+        // Spanning all monitors: one button area per screen, relative to
+        // the top-left corner of the whole desktop
+        for (QScreen* const screen : QGuiApplication::screens()) {
+            QRect r = screen->geometry();
+            r.translate(-topLeft);
+            areas.append(r);
+        }
+    } else
+#endif
+      if (m_context.fullscreen) {
         // Always display on a single screen, normalized to (0, 0)
         QScreen* screenForAreas = selectedScreen;
         if (!screenForAreas) {

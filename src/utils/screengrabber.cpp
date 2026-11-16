@@ -244,6 +244,14 @@ QPixmap ScreenGrabber::selectMonitorAndCrop(const QPixmap& fullScreenshot,
         return cropToMonitor(fullScreenshot, 0);
     }
 
+#if defined(Q_OS_WIN)
+    // Span all monitors: keep the whole desktop, no monitor selection
+    if (ConfigHandler().spanAllMonitors()) {
+        m_selectedMonitor = -1;
+        return fullScreenshot;
+    }
+#endif
+
     // Capture Active Monitor: auto-select monitor under cursor
     if (ConfigHandler().captureActiveMonitor()) {
         if (m_info.waylandDetected()) {
